@@ -8,7 +8,7 @@ class Category_counter():
         self.data = data
         self.file_in = file_in
         self.file_out = file_out
-        self.kw_list = pd.read_excel(file_in, usecols='A:B', sheet_name='KW_list') #get kw list here
+        self.kw_list = pd.read_excel("KW_list_full.xlsx", usecols='A:B', sheet_name='KW_list') #get kw list here
         self.results = pd.DataFrame()
 
     def read(self):
@@ -17,7 +17,7 @@ class Category_counter():
         print("Data: \n")
         print(self.data.head())
         self.results = pd.DataFrame(0, index=range(len(self.data)), columns=range(8))
-        self.results[0] = self.data.iloc[:, 0].values
+        self.results[0] = self.data.reset_index().index + 1
 
         print(self.data.head())
         print(self.results.head())
@@ -30,7 +30,7 @@ class Category_counter():
         for value in row:
             selected = self.kw_list[self.kw_list['Keywords'] == value]
             if not selected.empty:
-                self.results.at[row.name, selected.iloc[0,1]] += 1
+                self.results.at[row.name, selected.iloc[0,1]+1] += 1
 
     def write_xcel(self):
         # creating an ExcelWriter object
@@ -40,10 +40,13 @@ class Category_counter():
         #print('DataFrames are written to Excel File successfully.')
 
 if __name__ == "__main__":
-    file = "KW_list_full.xlsx"
+    file = "Old.csv"
     file_out = "KW_occurence_count.xlsx"
-    data = pd.read_excel(file, usecols='A:AU', sheet_name='Fin_data') 
-    #data = pd.read_excel(file, usecols='A:AJ', sheet_name='Eng_data')
+    #data = pd.read_excel(file, usecols='A:AU', sheet_name='Fin_data') 
+    data = pd.read_csv(file, delimiter=",", encoding='utf-8', error_bad_lines=False)
+    drop_columns = data.columns[0:10] # columns 0-9 dont contain KWs 
+    data = data.drop(drop_columns, axis='columns')
+
     #data = pd.read_excel(file, usecols='', sheet_name='Old_data')
     print("Data: \n")
     print(data.head())
