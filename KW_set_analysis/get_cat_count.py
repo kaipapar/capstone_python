@@ -12,7 +12,9 @@ class Category_counter():
         self.results = pd.DataFrame()
 
     def read(self):
+        print("KW_list: \n")
         print(self.kw_list.head())
+        print("Data: \n")
         print(self.data.head())
         self.results = pd.DataFrame(0, index=range(len(self.data)), columns=range(8))
         self.results[0] = self.data.iloc[:, 0].values
@@ -40,11 +42,12 @@ class Category_counter():
 if __name__ == "__main__":
     file = "KW_list_full.xlsx"
     file_out = "KW_occurence_count.xlsx"
-    #data = pd.read_excel(file, usecols='A:AU', sheet_name='Fin_data') 
-    data = pd.read_excel(file, usecols='', sheet_name='Eng_data')
+    data = pd.read_excel(file, usecols='A:AU', sheet_name='Fin_data') 
+    #data = pd.read_excel(file, usecols='A:AJ', sheet_name='Eng_data')
     #data = pd.read_excel(file, usecols='', sheet_name='Old_data')
+    print("Data: \n")
     print(data.head())
-    cls_instance = Category_counter(data, file, file_out)
+    cls_instance = Category_counter(data=data, file_in=file, file_out=file_out)
     cls_instance.read()
     cls_instance.write_xcel()
 
